@@ -42,7 +42,7 @@ class DataIngestion:
             
             logging.info("Train Test Split Initiated")
 
-            train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
+            train_set, test_set = train_test_split(df, test_size=0.2, random_state=42, stratify=df['is_fraud'])
             train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
             test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
 
@@ -56,6 +56,6 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e, sys)
             
-# if __name__ == "__main__":
-#     obj = DataIngestion()
-#     obj.initiate_data_ingestion()
+if __name__ == "__main__":
+    obj = DataIngestion()
+    obj.initiate_data_ingestion()
