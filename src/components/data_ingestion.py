@@ -34,7 +34,7 @@ class DataIngestion:
         """
         logging.info("Entered the data ingestion method or component")
         try:
-            df = pd.read_csv(r"G:\My Drive\Study\Project - Credit Card Fraud Detection\Data\fraudTrain.csv")
+            df = pd.read_csv(r"G:\My Drive\Study\Project - Credit Card Fraud Detection\Data\fraudTrain.csv", index_col=0)
             logging.info('Read the dataset as dataframe')
 
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
