@@ -11,13 +11,13 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
 
 from src.exception import CustomException
 from src.logger import logging
-from src.utils import feature_engineering
+from src.utils import feature_engineering, save_object
 
 # ==============================================================================
 
 @dataclass
 class DataTransformationConfig:    
-    preprocessor_ob_file_path = os.path.join('artifact','preprocessor.pkl')
+    preprocessor_obj_file_path = os.path.join('artifacts','preprocessor.pkl')
 
 # ==============================================================================
 
@@ -103,8 +103,8 @@ class DataTransformation:
             logging.info("Saved preprocessing object")
 
             save_object(
-                file_path=self.data_transformation_config.preprocessor_obj_file_path,
-                obj=preprocessing_obj
+                file_path = self.data_transformation_config.preprocessor_obj_file_path,
+                obj = preprocessing_obj
             )
 
             return (
@@ -115,5 +115,5 @@ class DataTransformation:
             
         except Exception as e:
             raise CustomException(e, sys)
-        # ----------------------------------------------------------------------------------------------------------------
+        
     # ==============================================================================

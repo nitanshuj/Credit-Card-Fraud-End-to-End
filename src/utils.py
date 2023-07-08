@@ -9,7 +9,8 @@ import pandas as pd
 from datetime import date, datetime
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import f1_score, accuracy_score, recall_score, precision_score, precision_recall_curve, matthews_corrcoef
+from sklearn.metrics import f1_score, accuracy_score, recall_score
+from sklearn.metrics import precision_score, precision_recall_curve, matthews_corrcoef
 
 from src.exception import CustomException
 
@@ -24,9 +25,10 @@ def feature_engineering(train_df, test_df):
     current_date = datetime.combine(date.today(), datetime.min.time())
 
     # Working on train data
-    train_df["trans_date_trans_time"] = pd.to_datetime(train_df["trans_date_trans_time"], format='ISO8601')
+    train_df["trans_date_trans_time"] = pd.to_datetime(train_df["trans_date_trans_time"], format='ISO8601')    
     train_df["dob"] = pd.to_datetime(train_df["dob"], format='ISO8601') 
-    train_df['age'] = (current_date - train_df['dob']//pd.Timedelta(days=365.25))
+    # df['Age'] = (current_date - df['dob']) // pd.Timedelta(days=365.25)
+    train_df['age'] = ((current_date - train_df['dob'])//pd.Timedelta(days=365.25))
     train_df['year_transaction'] = train_df['trans_date_trans_time'].dt.year
     train_df['month_transaction'] = train_df['trans_date_trans_time'].dt.month
     train_df['gender'] = train_df['gender'].apply(lambda x: 0 if x == 'F' else 1)
@@ -37,7 +39,7 @@ def feature_engineering(train_df, test_df):
     # Working on test data
     test_df["trans_date_trans_time"] = pd.to_datetime(test_df["trans_date_trans_time"], format='ISO8601')
     test_df["dob"] = pd.to_datetime(test_df["dob"], format='ISO8601') 
-    test_df['age'] = (current_date - test_df['dob']//pd.Timedelta(days=365.25))
+    test_df['age'] = ((current_date - test_df['dob'])//pd.Timedelta(days=365.25))
     test_df['year_transaction'] = test_df['trans_date_trans_time'].dt.year
     test_df['month_transaction'] = test_df['trans_date_trans_time'].dt.month    
     test_df['gender'] = test_df['gender'].apply(lambda x: 0 if x == 'F' else 1)

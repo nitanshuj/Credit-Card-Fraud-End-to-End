@@ -26,7 +26,7 @@ class ModelTrainer:
         self.model_trainer_config = ModelTrainerConfig()
     
     
-    def initiate_model_trainer(self, train_array, test_array, preprocessor_path):
+    def initiate_model_trainer(self, train_array, test_array):
         try:
             logging.info("Split training and test input data")
             
@@ -46,11 +46,11 @@ class ModelTrainer:
 
             params = {
                 "Logistic_Regression":{
+                    'solver':['liblinear'],
                     'penalty':['l1', 'l2'],
                     'class_weight':['balanced']
                 },
                 "Random_Forest":{
-                    'criterion':['squared_error'],
                     'class_weight':['balanced'],
                     'n_estimators':[8, 16]
                 }
@@ -58,14 +58,6 @@ class ModelTrainer:
 
             logging.info("Model Training Begins")
             
-            print("Model Training Begins!")
-
-            model_report:dict = evaluate_models(X_train=X_train, 
-                                                y_train=y_train, 
-                                                X_test=X_test, 
-                                                y_test=y_test, 
-                                                models=models)  #X_train, y_train, X_test, y_test, models, param
-
             model_report = evaluate_models(X_train=X_train,
                                            y_train=y_train, 
                                            X_test=X_test, 
@@ -94,7 +86,8 @@ class ModelTrainer:
             predicted=best_model.predict(X_test)
 
             recall = recall_score(y_test, predicted)
-            print("Recall Score: ", recall)
+            print("Model Name   : ", best_model_name)
+            print("Recall Score : ", recall)
 
             return recall
 
