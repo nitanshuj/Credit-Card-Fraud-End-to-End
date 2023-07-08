@@ -1,27 +1,64 @@
 import os
 import sys
+import dill
+import pickle
 
 import numpy as np 
 import pandas as pd
-import dill
-import pickle
+
+from datetime import date, datetime
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 
 from src.exception import CustomException
 
+# ==============================================================================
+
+def feature_engineering(train_df, test_df):
+    """
+        Feature Engineering
+    """        
+    
+    # Get the current date & converting it into datetime
+    current_date = datetime.combine(date.today(), datetime.min.time())
+
+    # Working on train data
+    train_df["trans_date_trans_time"] = pd.to_datetime(train_df["trans_date_trans_time"], format='ISO8601')
+    train_df["dob"] = pd.to_datetime(train_df["dob"], format='ISO8601') 
+    train_df['age'] = (current_date - train_df['dob']//pd.Timedelta(days=365.25))
+    train_df['year_transaction'] = train_df['trans_date_trans_time'].dt.year
+    train_df['month_transaction'] = train_df['trans_date_trans_time'].dt.month
+    train_df['gender'] = train_df['gender'].apply(lambda x: 0 if x == 'F' else 1)
+    train_df['year_transaction'] = train_df['year_transaction'].apply(lambda x: 0 if x==2019 else 1)
+    train_df = softcapping(train_df, 'amt', 0.1, 0.99) # Softcapping for Outlier Treatment
+    train_df.set_index('trans_num', inplace=True)
+
+    # Working on test data
+    test_df["trans_date_trans_time"] = pd.to_datetime(test_df["trans_date_trans_time"], format='ISO8601')
+    test_df["dob"] = pd.to_datetime(test_df["dob"], format='ISO8601') 
+    test_df['age'] = (current_date - test_df['dob']//pd.Timedelta(days=365.25))
+    test_df['year_transaction'] = test_df['trans_date_trans_time'].dt.year
+    test_df['month_transaction'] = test_df['trans_date_trans_time'].dt.month    
+    test_df['gender'] = test_df['gender'].apply(lambda x: 0 if x == 'F' else 1)
+    test_df['year_transaction'] = test_df['year_transaction'].apply(lambda x: 0 if x==2019 else 1)
+    test_df.set_index('trans_num', inplace=True)
+    
+    return train_df, test_df
+
+# ==============================================================================
+
 def save_object(file_path, obj):
     try:
         dir_path = os.path.dirname(file_path)
-
         os.makedirs(dir_path, exist_ok=True)
-
         with open(file_path, "wb") as file_obj:
             pickle.dump(obj, file_obj)
 
     except Exception as e:
         raise CustomException(e, sys)
-    
+
+# ==============================================================================
+
 def evaluate_models(X_train, y_train, X_test, y_test, models, param):
     try:
         report = {}
@@ -39,11 +76,9 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
             #model.fit(X_train, y_train)  # Train model
 
             y_train_pred = model.predict(X_train)
-
             y_test_pred = model.predict(X_test)
 
             train_model_score = r2_score(y_train, y_train_pred)
-
             test_model_score = r2_score(y_test, y_test_pred)
 
             report[list(models.keys())[i]] = test_model_score
@@ -52,7 +87,9 @@ def evaluate_models(X_train, y_train, X_test, y_test, models, param):
 
     except Exception as e:
         raise CustomException(e, sys)
-    
+
+# ==============================================================================
+
 def load_object(file_path):
     try:
         with open(file_path, "rb") as file_obj:
@@ -60,6 +97,7 @@ def load_object(file_path):
     except Exception as e:
         raise CustomException(e, sys)
 
+# ==============================================================================
 
 def show_null_percentage(df):
     
@@ -80,6 +118,8 @@ def show_null_percentage(df):
     result_df = missing_percent_df[missing_percent_df['percent_missing'] > 0]
     return result_df
 
+# ==============================================================================
+
 def softcapping(df, col,lower_percentile, higher_percentile):
     """
     Function for Soft Capping Outliers
@@ -92,3 +132,6 @@ def softcapping(df, col,lower_percentile, higher_percentile):
     if higher_percentile < 100:
         df = df[df[col]<=percentiles[1]]
     return df
+
+# ==============================================================================
+

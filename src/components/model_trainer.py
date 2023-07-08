@@ -19,24 +19,25 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
-
 # Importing other utilities
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.metrics import f1_score, accuracy_score, recall_score, precision_score, precision_recall_curve, matthews_corrcoef
 
 from src.exception import CustomException
 from src.logger import logging
-
 from src.utils import save_object,evaluate_models
+
 
 @dataclass
 class ModelTrainerConfig:
     trained_model_file_path=os.path.join("artifacts","model.pkl")
 
 
+
 class ModelTrainer:
     def __init__(self):
         self.model_trainer_config = ModelTrainerConfig()
+    
     
     def initiate_model_trainer(self, train_array, test_array, preprocessor_path):
         try:
@@ -55,9 +56,13 @@ class ModelTrainer:
             "Naive Bayes": GaussianNB()            
         }
 
+        model_report:dict = evaluate_models(X_train=X_train, 
+                                            y_train=y_train, 
+                                            X_test=X_test, 
+                                            y_test=y_test, 
+                                            models=models)  #X_train, y_train, X_test, y_test, models, param
 
-        model_report:dict = evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)  #X_train, y_train, X_test, y_test, models, param
-
+        return 0
         
         except Exception as e:
             raise CustomException(e, sys)
