@@ -1,119 +1,217 @@
+<!DOCTYPE html>
 <html>
+<head>
+    <title>Credit Card Fraud Detector</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        .login {
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 100px;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #00adef;
+            box-shadow: 0px 0px 5px rgba(0, 173, 239, 0.5);
+        }
+        
+        .form-control.select {
+            height: 40px;
+        }
+        
+        .placeholder {
+            color: #999;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            background-color: #00adef;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .submit-btn:hover {
+            background-color: #008acf;
+        }
+        
+        .prediction-result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
 <body>
     <div class="login">
-       <h1>Student Exam Performance Indicator</h1>
-   
-       <form action="{{ url_for('predict_datapoint')}}" method="post">
-        <h2>
-            <legend>Student Exam Performance Prediction</legend>
-        </h2>
-        <div class="mb-3">
-            <label class="form-label">Gender</label>
-            <select class="form-control" name="gender" placeholder="Enter you Gender" required>
-                <option class="placeholder" selected disabled value="">Select your Gender</option>
-                <option value="male">
-                    Maless
-                </option>
-                <option value="female">
-                    Female
-                </option>
-            </select>
-        </div>
+        <h1>Credit Card Fraud Detector</h1>
 
-        <div class="mb-3">
-            <label class="form-label">Race or Ethnicity</label>
-            <select class="form-control" name="ethnicity" placeholder="Enter you ethnicity" required>
-                <option class="placeholder" selected disabled value="">Select Ethnicity</option>
-                <option value="group A">
-                    Group A
-                </option>
-                <option value="group B">
-                    Group B
-                </option>
-                <option value="group C">
-                    Group C
-                </option>
-                <option value="group D">
-                    Group D
-                </option>
-                <option value="group E">
-                    Group E
-                </option>
-            </select>
-        </div>
+        <form action="{{ url_for('predict_datapoint')}}" method="post">
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <select class="form-control select" name="category" required>
+                    <option class="placeholder" selected disabled value="">Select Category</option>
+                    <option value="misc_net">misc_net</option>
+                    <option value="grocery_pos">grocery_pos</option>
+                    <option value="entertainment">entertainment</option>
+                    <option value="gas_transport">gas_transport</option>
+                    <option value="misc_pos">misc_pos</option>
+                    <option value="shopping_net">shopping_net</option>
+                    <option value="shopping_pos">shopping_pos</option>
+                    <option value="food_dining">food_dining</option>
+                    <option value="personal_care">personal_care</option>
+                    <option value="health_fitness">health_fitness</option>
+                    <option value="travel">travel</option>
+                    <option value="kids_pets">kids_pets</option>
+                    <option value="home">home</option>                
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Parental Level of Education</label>
-            <select class="form-control" name="parental_level_of_education"
-                placeholder="Enter you Parent Education" required>
-                <option class="placeholder" selected disabled value="">Select Parent Education</option>
-                <option value="associate's degree">
-                    associate's degree
-                </option>
-                <option value="bachelor's degree">
-                    bachelor's degree
-                </option>
-                <option value="high school">
-                    high school
-                </option>
-                <option value="master's degree">
-                    master's degree
-                </option>
-                <option value="some college">
-                    some college
-                </option>
-                <option value="some high school">
-                    some high school
-                </option>
-            </select>
-        </div>
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <select class="form-control" name="state" placeholder="Enter a US state" required>
+                    <option class="placeholder" selected disabled value="">Select State</option>
+                    <option value="NC">NC</option>
+                    <option value="WA">WA</option>
+                    <option value="ID">ID</option>
+                    <option value="MT">MT</option>
+                    <option value="VA">VA</option>
+                    <option value="PA">PA</option>
+                    <option value="KS">KS</option>
+                    <option value="TN">TN</option>
+                    <option value="IA">IA</option>
+                    <option value="WV">WV</option>
+                    <option value="FL">FL</option>
+                    <option value="CA">CA</option>
+                    <option value="NM">NM</option>
+                    <option value="NJ">NJ</option>
+                    <option value="OK">OK</option>
+                    <option value="IN">IN</option>
+                    <option value="MA">MA</option>
+                    <option value="TX">TX</option>
+                    <option value="WI">WI</option>
+                    <option value="MI">MI</option>
+                    <option value="WY">WY</option>
+                    <option value="HI">HI</option>
+                    <option value="NE">NE</option>
+                    <option value="OR">OR</option>
+                    <option value="LA">LA</option>
+                    <option value="DC">DC</option>
+                    <option value="KY">KY</option>
+                    <option value="NY">NY</option>
+                    <option value="MS">MS</option>
+                    <option value="UT">UT</option>
+                    <option value="AL">AL</option>
+                    <option value="AR">AR</option>
+                    <option value="MD">MD</option>
+                    <option value="GA">GA</option>
+                    <option value="ME">ME</option>
+                    <option value="AZ">AZ</option>
+                    <option value="MN">MN</option>
+                    <option value="OH">OH</option>
+                    <option value="CO">CO</option>
+                    <option value="VT">VT</option>
+                    <option value="MO">MO</option>
+                    <option value="SC">SC</option>
+                    <option value="NV">NV</option>
+                    <option value="IL">IL</option>
+                    <option value="NH">NH</option>
+                    <option value="SD">SD</option>
+                    <option value="AK">AK</option>
+                    <option value="ND">ND</option>
+                    <option value="CT">CT</option>
+                    <option value="RI">RI</option>
+                    <option value="DE">DE</option>
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Lunch Type</label>
-            <select class="form-control" name="lunch" placeholder="Enter you Lunch" required>
-                <option class="placeholder" selected disabled value="">Select Lunch Type</option>
-                <option value="free/reduced">
-                    free/reduced
-                </option>
-                <option value="standard">
-                    standard
-                </option>
-            </select>
-        </div>
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <input class="form-control" type="number" name="amt" placeholder="Enter the amount of transaction" min='0' />
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Test preparation Course</label>
-            <select class="form-control" name="test_preparation_course" placeholder="Enter you Course"
-                required>
-                <option class="placeholder" selected disabled value="">Select Test_course</option>
-                <option value="none">
-                    None
-                </option>
-                <option value="completed">
-                    Completed
-                </option>
-            </select>
-        </div>
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <select class="form-control" name="gender" placeholder="Enter you Gender" required>
+                    <option class="placeholder" selected disabled value="">Select your Gender</option>
+                    <option value=1> Male </option>
+                    <option value=0>Female</option>
+                </select>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Writing Score out of 100</label>
-            <input class="form-control" type="number" name="reading_score"
-                placeholder="Enter your Reading score" min='0' max='100' />
-        </div>
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <input class="form-control" type="number" name="age" placeholder="Enter the age" min=0 max=105 />
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <input class="form-control" type="number" name="city_pop" placeholder="City Population" min=0 />
+            </div>        
+            
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <select class="form-control" name="year_transaction" placeholder="Enter the year of transaction" required>
+                    <option class="placeholder" selected disabled value="">Enter year of transaction</option>
+                    <option value=1>Other years</option>
+                    <option value=0>2019</option>
+                </select>
+            </div>          
 
-        <div class="mb-3">
-            <label class="form-label">Reading Score out of 100</label>
-            <input class="form-control" type="number" name="writing_score"
-                placeholder="Enter your Reading Score" min='0' max='100' />
-        </div>
+            <div class="mb-3">
+                <label class="form-label"></label>
+                <select class="form-control" name="month_transaction" placeholder="Enter the month of transaction" required>
+                    <option class="placeholder" selected disabled value="">Enter the month of transaction</option>
+                    <option value=1>January</option>
+                    <option value=2>February</option>
+                    <option value=3>March</option>
+                    <option value=4>April</option>
+                    <option value=5>May</option>
+                    <option value=6>June</option>
+                    <option value=7>July</option>
+                    <option value=8>August</option>
+                    <option value=9>September</option>
+                    <option value=10>October</option>
+                    <option value=11>November</option>
+                    <option value=12>December</option>
+                </select>
+            </div>                    
 
-        <div class="mb-3">
-            <input class="btn btn-primary" type="submit" value="Predict your Maths Score" required />
-        </div>
+            <button type="submit" class="submit-btn">Predict</button>
+        </form>
 
-    </form>
-    <h2>
-       The prediction is {{results}}
-    </h2>
-   <body>
+        <h2 class="prediction-result">The prediction: {{results}}</h2>
+    </div>
+</body>
 </html>

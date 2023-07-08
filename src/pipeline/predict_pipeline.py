@@ -3,36 +3,34 @@ import os
 from src.utils import load_object
 from src.exception import CustomException
 from src.logger import logging
+import pandas as pd
 
 
 class PredictPipeline:
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     def predict(self, features):
         try:
             model_path = os.path.join("artifacts", "model.pkl")
-            preprocessor_path = os.path.join("artifacts", preprocessor.pkl)            
+            preprocessor_path = os.path.join("artifacts", 'preprocessor.pkl')            
             print("Before Loading")            
             model = load_object(file_path=model_path)
             preprocessor = load_object(file_path=preprocessor_path)
             print("After Loading")
             data_scaled = preprocessor.transform(features)
+            # print("data scaled ran!!")
             preds = model.predict(data_scaled)            
+            # print("preds generated")
             return preds
         except Exception as e:
             raise CustomException(e,sys)
         
 class CustomData:
-    def __init__(self, 
-                 category: str, 
-                 state: str, 
-                 amt: float, 
-                 gender: int, 
-                 age: int, 
-                 city_pop: int,
-                 year_transaction:int, 
-                 month_transaction:int):
+    def __init__(self, category, state, 
+                 amt, gender, age, 
+                 city_pop, year_transaction, 
+                 month_transaction):
         
         self.category = category
         self.state = state
@@ -45,6 +43,18 @@ class CustomData:
 
     def get_data_as_data_frame(self):
         try:
-            pass
+            custom_Data_input_dict = {
+                "category":[self.category],
+                "state":[self.state],
+                "amt":[self.amt],
+                "gender":[self.gender],
+                "age":[self.age],
+                "city_pop":[self.city_pop],
+                "year_transaction":[self.year_transaction],
+                "month_transaction":[self.month_transaction]
+            }
+            return pd.DataFrame(custom_Data_input_dict)
         except Exception as e:
             raise CustomException(e,sys)    
+        
+
