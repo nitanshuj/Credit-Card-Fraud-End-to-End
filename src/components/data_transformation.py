@@ -46,7 +46,7 @@ class DataTransformation:
             # Pipeline for Categorical Variables
             cat_pipeline = Pipeline(
                 steps=[
-                    ("ordinal_encoder", OrdinalEncoder())
+                    ("ordinal_encoder", OrdinalEncoder()),
                     ("scalar", StandardScaler())
                 ])
 
