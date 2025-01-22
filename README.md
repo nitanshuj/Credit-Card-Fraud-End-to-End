@@ -20,7 +20,7 @@ For `Finex`, retaining high profitable customers is the most important business 
 
 > `1) Finding when a fraud has occured.`
 
-> `2) Making a `
+> `2) Making a fraud detection algorithm`
 
 <br><br>
 
